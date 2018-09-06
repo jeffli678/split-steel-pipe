@@ -1,5 +1,6 @@
 #encoding: utf-8
 from collections import defaultdict
+import math
 
 L = 6
 demand = defaultdict(int)
@@ -14,6 +15,13 @@ def solve_one_pipe():
 def print_demand():
     for k, v in demand.items():
         print(str(k) + '\t' + str(v))
+
+def count_pipe():
+    sum = 0
+    for _, v in demand.items():
+        sum += v
+
+    return sum
 
 def total_len():
     sum = 0
@@ -36,8 +44,14 @@ def read_input(file_name = 'input-2.txt'):
 def main():
     read_input()
     print_demand()
+    
     l = total_len()
-    print(l)
+    print('# of different lengths: %d' % len(demand))
+    print('# of sections of steel pipes: %d' % count_pipe())
+    print('total length: %.3f' % l)
+    min_n = int(math.ceil(l / L))
+    print('lower bound for N (most likely unreachable): %d' % min_n)
+    
     # solve_one_pipe()
 
 
