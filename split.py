@@ -31,6 +31,7 @@ def total_len():
     return sum
 
 def read_input(file_name = 'input-2.txt'):
+    global demand
     lines = open(file_name).read().splitlines()
     for line in lines:
         if line.startswith('#'): 
@@ -41,6 +42,24 @@ def read_input(file_name = 'input-2.txt'):
         except:
             pass
         
+    demand = {k:v for k,v in demand.items() if v != 0}
+
+def greedy():
+    # pick longer ones first, and then shorters ones
+    # if the shortest one does not fit into the current pipe
+    # proceed to the next one
+
+    lengths = sorted(demand, reverse = True)
+    nums = [demand[l] for l in lengths]
+
+    print(lengths)
+    print(nums)
+
+    cnt = sum(nums)
+    N = 0
+    while cnt > 0:
+        pass
+
 def main():
     read_input()
     print_demand()
@@ -51,8 +70,9 @@ def main():
     print('total length: %.3f' % l)
     min_n = int(math.ceil(l / L))
     print('lower bound for N (most likely unreachable): %d' % min_n)
-    
+
     # solve_one_pipe()
+    greedy()
 
 
 if __name__ == '__main__':
