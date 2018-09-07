@@ -2,6 +2,7 @@
 from collections import defaultdict
 import math
 import logging
+import sys
 
 L = 6
 demand = defaultdict(int)
@@ -41,7 +42,13 @@ def total_len():
 
 def read_input(file_name = 'input.txt'):
     global demand
-    lines = open(file_name).read().splitlines()
+    try:
+        lines = open(file_name).read().splitlines()
+    except:
+        print('fail to read input from %s, please check. ' % file_name)
+        print('exiting...')
+        sys.exit(0)
+        
     for line in lines:
         if line.startswith('#'): 
             continue
