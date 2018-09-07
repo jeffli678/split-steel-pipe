@@ -1,20 +1,29 @@
 #encoding: utf-8
 from collections import defaultdict
 import math
+import logging
 
 L = 6
 demand = defaultdict(int)
+output_name = 'output.txt'
+
+def clear_output(outptu_name):
+    with open(outptu_name, 'w'):
+        pass
 
 def solve_one_pipe():
     max_n = []
     all_len = demand.keys()
     for l in all_len:
         max_n.append(int(L / l))
-    print(max_n)
+    logging.info(max_n)
 
 def print_demand():
-    for k, v in demand.items():
-        print(str(k) + '\t' + str(v))
+    logging.info('You input is: ')
+    lengths = sorted(demand, reverse = True)
+    nums = [demand[l] for l in lengths]
+    for i in range(len(lengths)):
+        logging.info('%-10s' % lengths[i] + '\t' + str(nums[i]))
 
 def count_pipe():
     sum = 0
@@ -60,11 +69,12 @@ def greedy():
     lengths = sorted(demand, reverse = True)
     nums = [demand[l] for l in lengths]
 
-    print(lengths)
-    print(nums)
+    logging.debug(lengths)
+    logging.debug(nums)
 
     cnt = sum(nums)
     N = 0
+    result = []
 
     while cnt > 0:
 
@@ -92,26 +102,44 @@ def greedy():
                     del lengths[idx]
                     del nums[idx]
 
+        result.append(picked)
 
-        # print the info about the last section
-        print(picked)
-        print('%.3f\t %.3f' % (current_len, L - current_len))
-    
-    print(N)
+    return N, result
+
+def print_result(N, result):
+
+    logging.info('')
+    logging.info('You need %d steel pipes.' % N)
+    for i, picked in enumerate(result):
+        output = '%d:\t' %  (i + 1)
+        output += ', '.join([str(elem) for elem in picked])
+        logging.info(output)
+
+        used_len = sum(picked)
+        wasted_len = L - used_len
+        logging.debug('used: %.3f\t wasted: %.3f' % (used_len, wasted_len))
 
 def main():
+
+    clear_output(output_name)
+    logging.basicConfig(format='%(message)s',\
+                    filename=output_name, level=logging.INFO)
+    logging.info('=' * 50)
+
     read_input()
     print_demand()
     
     l = total_len()
-    print('# of different lengths: %d' % len(demand))
-    print('# of sections of steel pipes: %d' % count_pipe())
-    print('total length: %.3f' % l)
+    logging.debug('# of different lengths: %d' % len(demand))
+    logging.debug('# of sections of steel pipes: %d' % count_pipe())
+    logging.info('total length: %.3f' % l)
     min_n = int(math.ceil(l / L))
-    print('lower bound for N (most likely unreachable): %d' % min_n)
+    logging.info('lower bound for N (may be unreachable): %d' % min_n)
 
-    # solve_one_pipe()
-    greedy()
+    N, result = greedy()
+    print_result(N, result)
+    logging.info('=' * 50)
+    print('Done! Please check "output.txt"')
 
 
 if __name__ == '__main__':
