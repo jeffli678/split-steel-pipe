@@ -44,6 +44,14 @@ def read_input(file_name = 'input-2.txt'):
         
     demand = {k:v for k,v in demand.items() if v != 0}
 
+def find_next_feasible(lengths, len_remaining):
+
+    for i, l in enumerate(lengths):
+        if l < len_remaining:
+            return (i, l)
+    
+    return (-1, 0)
+
 def greedy():
     # pick longer ones first, and then shorters ones
     # if the shortest one does not fit into the current pipe
@@ -57,8 +65,39 @@ def greedy():
 
     cnt = sum(nums)
     N = 0
+
     while cnt > 0:
-        pass
+
+        current_len = 0
+        picked = []
+
+        # emulate a do-while
+        while True:
+
+            idx, length = find_next_feasible(lengths, L - current_len)
+
+            if idx == -1:
+                # even the shortest one does not fit
+                # start a new one
+                N += 1
+                break
+
+            else:
+
+                current_len += length
+                picked.append(length)
+                cnt -= 1
+                nums[idx] -= 1
+                if nums[idx] == 0:
+                    del lengths[idx]
+                    del nums[idx]
+
+
+        # print the info about the last section
+        print(picked)
+        print('%.3f\t %.3f' % (current_len, L - current_len))
+    
+    print(N)
 
 def main():
     read_input()
