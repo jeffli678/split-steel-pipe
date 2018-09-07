@@ -30,7 +30,7 @@ def total_len():
     
     return sum
 
-def read_input(file_name = 'input-2.txt'):
+def read_input(file_name = 'input.txt'):
     global demand
     lines = open(file_name).read().splitlines()
     for line in lines:
