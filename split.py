@@ -3,21 +3,32 @@ from collections import defaultdict
 import math
 import logging
 import sys
+import json
 
 L = 6
 demand = defaultdict(int)
 output_name = 'output.txt'
 
+def parse_config():
+    config = open('config.txt').read()
+    config = json.loads(config)
+    L = 6
+    log_level = logging.INFO
+
+    log_level_map = {'info' : logging.INFO, 'debug' : logging.DEBUG}
+    try:
+        L = config['length']
+        log_level_str = config['log_level']
+        log_level = log_level_map[log_level_str]
+    except:
+        pass
+
+    return L, log_level
+    
+
 def clear_output(outptu_name):
     with open(outptu_name, 'w'):
         pass
-
-def solve_one_pipe():
-    max_n = []
-    all_len = demand.keys()
-    for l in all_len:
-        max_n.append(int(L / l))
-    logging.info(max_n)
 
 def print_demand():
     logging.info('You input is: ')
@@ -117,6 +128,8 @@ def print_result(N, result):
 
     logging.info('')
     logging.info('You need %d steel pipes.' % N)
+    logging.info('Steel pipe length: %dm.' % L)
+
     for i, picked in enumerate(result):
         output = '%d:\t' %  (i + 1)
         output += ', '.join([str(elem) for elem in picked])
@@ -128,9 +141,13 @@ def print_result(N, result):
 
 def main():
 
+    # global L
+    # L, log_level = parse_config()
+    log_level = logging.INFO
+
     clear_output(output_name)
-    logging.basicConfig(format='%(message)s',\
-                    filename=output_name, level=logging.INFO)
+    logging.basicConfig(format = '%(message)s',\
+                    filename = output_name, level = log_level)
     logging.info('=' * 50)
 
     read_input()
